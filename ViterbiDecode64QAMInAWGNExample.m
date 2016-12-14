@@ -40,7 +40,7 @@ for n = 1:length(EbNoVec)
     % Reset the error and bit counters
     [numErrsSoft,numErrsHard,numBits] = deal(0);
     
-    while numErrsSoft < 100 && numBits < 1e7
+    while numErrsSoft < 100 && numBits < 1e3
         % Generate binary data and convert to symbols
         dataIn = randi([0 1],numSymPerFrame*k,1);
         
