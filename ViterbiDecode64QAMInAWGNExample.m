@@ -6,10 +6,10 @@
 % Set the simulation parameters.
 clear; close all
 rng default
-M = 2;                 % Modulation order
+M = 4;                 % Modulation order
 k = log2(M);            % Bits per symbol
 EbNoVec = (-1:0.5:12)';       % Eb/No values (dB)
-numSymPerFrame = 1000;   % Number of QAM symbols per frame
+numSymPerFrame = 10000;   % Number of QAM symbols per frame
 %%
 % Initialize the BER results vectors.
 berEstSoft = zeros(size(EbNoVec)); 
@@ -17,8 +17,8 @@ berEstHard = zeros(size(EbNoVec));
 %%
 % Set the trellis structure and traceback length for a rate 1/2,
 % constraint length 7, convolutional code.
-trellis = poly2trellis(5,{'1+x^3+x^4','1+x+x^3+x^4'});
-tbl = 25;
+trellis = poly2trellis(3,{'1+x^2','1+x+x^2'});
+tbl = 15;
 rate = 1/2;
 %%
 % The main processing loops performs these steps:
@@ -40,7 +40,7 @@ for n = 1:length(EbNoVec)
     % Reset the error and bit counters
     [numErrsSoft,numErrsHard,numBits] = deal(0);
     
-    while numErrsSoft < 100 && numBits < 1e3
+    while numErrsSoft < 250 && numBits < 1e7
         % Generate binary data and convert to symbols
         dataIn = randi([0 1],numSymPerFrame*k,1);
         
@@ -84,8 +84,8 @@ end
 % performance for an uncoded 64-QAM channel.
 semilogy(EbNoVec,berEstSoft,'-*')
 hold on
-semilogy(EbNoVec,berawgn(EbNoVec,'psk',M,'nondiff'))
-legend('Soft','Uncoded','location','best')
+% semilogy(EbNoVec,berawgn(EbNoVec,'psk',M,'nondiff'))
+% legend('Soft','Uncoded','location','best')
 grid
 xlabel('Eb/No (dB)')
 ylabel('Bit Error Rate')
